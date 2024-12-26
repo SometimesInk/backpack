@@ -4,7 +4,9 @@
 #include <string.h>
 
 char *parse_environment_variable(char *variable) {
-  return getenv(variable + 1);
+  char *environment_var = getenv(variable + 1);
+  return (environment_var == NULL) ? "E5: Environment variable is NULL"
+                                   : environment_var;
 }
 
 char *parse_element(char *element) {
@@ -28,6 +30,12 @@ char *parse_element(char *element) {
 
 char *parse_command_execute_echo(char *arguments) {
   char *result = malloc(1);
+
+  // Check if successfully allocated memory
+  if (result == NULL) {
+    return "E6: Failed to allocate memory";
+  }
+
   result[0] = '\0';
 
   char *element = strtok(arguments, " ");

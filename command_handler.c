@@ -1,6 +1,7 @@
 #include "command_handler.h"
 #include "command_logic_echo.h"
 #include "input_handler.h"
+#include "items.h"
 #include "modes.h"
 #include <stdlib.h>
 #include <string.h>
@@ -28,9 +29,17 @@ int parse_command() {
 
     // Ensure null termination
     output[sizeof(output) - 1] = '\0';
+  } else if (strcmp(command, "render") == 0) {
+    // Safely copy to output
+    strncpy(output, items_render_all(), sizeof(output) - 1);
+
+    // Ensure null termination
+    output[sizeof(output) - 1] = '\0';
   } else {
     // Safely copy to output
     strncpy(output, "E1: Unknown command", sizeof(output) - 1);
+
+    // Ensure null termination
     output[sizeof(output) - 1] = '\0';
   }
 

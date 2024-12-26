@@ -16,26 +16,26 @@ int get_input(int *holder) {
 }
 
 int parse_key(int input) {
-  if (CURRENT_MODE == COMMAND_MODE) {
+  if (MODE_CURRENT == MODE_COMMAND) {
     // Parse key as a command
     if (parse_key_command(input) == 2)
       return parse_command();
 
     // Update command_window
-    mvwprintw(COMMAND_WINDOW, 0, COLUMNS - 5, "%i", input);
-    mvwprintw(COMMAND_WINDOW, 0, 1, "%s", COMMAND_INPUT);
+    mvwprintw(WINDOW_COMMAND, 0, COLUMNS - 5, "%i", input);
+    mvwprintw(WINDOW_COMMAND, 0, 1, "%s", COMMAND_INPUT);
   } else {
     switch (input) {
     case 58: // Colon
-      if (CURRENT_MODE != COMMAND_MODE) {
+      if (MODE_CURRENT != MODE_COMMAND) {
         // Clear command system and add command symbol
         exit_command_mode(EXIT_COMMAND_MODE_CLEAR_ALL_ADDITIVE, 0, NULL);
-        CURRENT_MODE = COMMAND_MODE;
+        MODE_CURRENT = MODE_COMMAND;
       }
       break;
     }
   }
-  wrefresh(COMMAND_WINDOW);
+  wrefresh(WINDOW_COMMAND);
   return 1;
 }
 
@@ -68,7 +68,7 @@ int parse_key_command(int input) {
   remove_character(COMMAND_INPUT, command_input_length, COMMAND_USED_INPUT);
 
   // Remove character from command window
-  mvwprintw(COMMAND_WINDOW, 0, COMMAND_USED_INPUT, " ");
-  wrefresh(COMMAND_WINDOW);
+  mvwprintw(WINDOW_COMMAND, 0, COMMAND_USED_INPUT, " ");
+  wrefresh(WINDOW_COMMAND);
   return 1;
 }

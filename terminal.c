@@ -3,4 +3,4 @@
 
 int ROWS, COLUMNS;
 
-void initialize_terminal() { getmaxyx(stdscr, ROWS, COLUMNS); }
+void terminal_initialize() { getmaxyx(stdscr, ROWS, COLUMNS); }

@@ -3,7 +3,7 @@
 
 extern int ROWS, COLUMNS;
 
-// Initializes global ROWS and COLUMNS variables
-extern void initialize_terminal();
+/// Initializes global ROWS and COLUMNS variables
+extern void terminal_initialize();
 
 #endif

@@ -1,9 +1,9 @@
 #ifndef MODES_H
 #define MODES_H
 
-typedef enum { NORMAL_MODE, COMMAND_MODE } Mode;
+typedef enum { MODE_NORMAL, MODE_COMMAND } Mode;
 
-extern Mode CURRENT_MODE;
+extern Mode MODE_CURRENT;
 
 const char *mode_as_string(Mode mode);
 

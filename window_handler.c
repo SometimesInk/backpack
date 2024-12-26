@@ -2,26 +2,21 @@
 #include "terminal.h"
 #include <ncurses.h>
 
-WINDOW *COMMAND_WINDOW;
-WINDOW *LINE_NUMBERS_WINDOW;
-WINDOW *MAIN_WINDOW;
+WINDOW *WINDOW_COMMAND;
+WINDOW *WINDOW_LINE_NUMBERS;
+WINDOW *WINDOW_MAIN;
 
-void initialize_windows() {
+void windows_initialize() {
   refresh();
-  COMMAND_WINDOW = newwin(1, COLUMNS, ROWS - 1, 0);
-  LINE_NUMBERS_WINDOW = newwin(ROWS - 1, 3, 0, 0);
-  MAIN_WINDOW = newwin(ROWS - 1, COLUMNS - 3, 0, 3);
+  WINDOW_COMMAND = newwin(1, COLUMNS, ROWS - 1, 0);
+  WINDOW_LINE_NUMBERS = newwin(ROWS - 1, 3, 0, 0);
+  WINDOW_MAIN = newwin(ROWS - 1, COLUMNS - 3, 0, 3);
 
-  start_color();
-  init_pair(1, COLOR_BLACK, COLOR_GREEN);
-  init_pair(2, COLOR_BLACK, COLOR_BLUE);
-  init_pair(3, COLOR_BLACK, COLOR_RED);
+  wbkgd(WINDOW_COMMAND, COLOR_PAIR(1));
+  wbkgd(WINDOW_LINE_NUMBERS, COLOR_PAIR(2));
+  wbkgd(WINDOW_MAIN, COLOR_PAIR(3));
 
-  wbkgd(COMMAND_WINDOW, COLOR_PAIR(1));
-  wbkgd(LINE_NUMBERS_WINDOW, COLOR_PAIR(2));
-  wbkgd(MAIN_WINDOW, COLOR_PAIR(3));
-
-  wrefresh(COMMAND_WINDOW);
-  wrefresh(LINE_NUMBERS_WINDOW);
-  wrefresh(MAIN_WINDOW);
+  wrefresh(WINDOW_COMMAND);
+  wrefresh(WINDOW_LINE_NUMBERS);
+  wrefresh(WINDOW_MAIN);
 }

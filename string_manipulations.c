@@ -6,7 +6,7 @@ int modify_character(char *string, int size, int position, char character) {
     string[position - 1] = character;
     return 1;
   } else {
-    return -1;
+    return -7;
   }
 }
 
@@ -20,6 +20,6 @@ int remove_character(char *string, int size, int position) {
     string[size - 1] = '\0';
     return 1;
   } else {
-    return -1;
+    return -7;
   }
 }

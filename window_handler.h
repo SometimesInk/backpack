@@ -3,10 +3,10 @@
 
 #include <ncurses.h>
 
-extern WINDOW *COMMAND_WINDOW;
-extern WINDOW *LINE_NUMBERS_WINDOW;
-extern WINDOW *MAIN_WINDOW;
+extern WINDOW *WINDOW_COMMAND;
+extern WINDOW *WINDOW_LINE_NUMBERS;
+extern WINDOW *WINDOW_MAIN;
 
-extern void initialize_windows();
+extern void windows_initialize();
 
 #endif

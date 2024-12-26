@@ -1,4 +1,5 @@
 #include "input_handler.h"
+#include "items.h"
 #include "main_handler.h"
 #include "terminal.h"
 #include "window_handler.h"
@@ -22,13 +23,30 @@ int main() {
     return EXIT_SUCCESS;
   }
 
+  // Initialize colors
+  start_color();
+  init_pair(1, COLOR_BLACK, COLOR_GREEN);
+  init_pair(2, COLOR_BLACK, COLOR_BLUE);
+  init_pair(3, COLOR_BLACK, COLOR_RED);
+  init_pair(4, COLOR_GREEN, COLOR_RED);
+  init_pair(5, COLOR_WHITE, COLOR_RED);
+  init_pair(6, COLOR_YELLOW, COLOR_RED);
+  init_pair(7, COLOR_CYAN, COLOR_RED);
+
   // Initialize terminal and windows
-  initialize_terminal();
-  initialize_windows();
+  terminal_initialize();
+  windows_initialize();
+  if (items_initialize() == -6) {
+    printw("E6: Failed to allocate memory");
+    getch();
+    endwin();
+    return EXIT_SUCCESS;
+  }
 
   while (get_input(&ch) && handle(ch))
     ;
 
   endwin();
+  free(ITEMS);
   return EXIT_SUCCESS;
 }
