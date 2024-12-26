@@ -1,11 +1,25 @@
 #!/bin/bash
 
-Output=".program"
-Dependencies="-lncurses"
+OUTPUT=".program"
+DEPENDENCIES="-lncurses"
 
-if [[ $# -ne 0 ]]; then
-  Output=$1
-fi
+# Parse flags
+for flag in "$@"; do
+  case $flag in
+  -o=* | --output=*)
+    OUTPUT="${flag#*=}"
+    shift
+    ;;
+  -d=* | --dependencies=*)
+    DEPENDENCIES="${flag#*=}"
+    shift
+    ;;
+  *)
+    echo "Error: Unknown flag '$flag'."
+    shift
+    ;;
+  esac
+done
 
 gcc -c $(ls *.c | xargs)
-gcc *.o -o $Output $Dependencies
+gcc *.o -o $OUTPUT $DEPENDENCIES

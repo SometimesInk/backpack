@@ -1,91 +1,74 @@
 #include "input_handler.h"
 #include "command_handler.h"
 #include "modes.h"
+#include "string_manipulations.h"
+#include "terminal.h"
+#include "window_handler.h"
 #include <ncurses.h>
+#include <string.h>
 
-char NORMAL_INPUT[100] = "";
 char COMMAND_INPUT[100] = "";
-int normal_used_length = 1;
-int command_used_length = 1;
+int COMMAND_USED_INPUT = 1;
 
-// Sets the value of "holder" variable to the keycode of the pressed key
-// Returns: 1 --- Success
 int get_input(int *holder) {
   *holder = getch();
   return 1;
 }
 
-// Adds key presses to NORMAL/COMMAND_INPUT
-// Returns: -1 --- Error (code 1)
-//           1 --- Success
 int parse_key(int input) {
-  if (CURRENT_MODE == COMMAND) {
-    if (input == 10) { // Enter key
-      // Parse command
+  if (CURRENT_MODE == COMMAND_MODE) {
+    // Parse key as a command
+    if (parse_key_command(input) == 2)
       return parse_command();
-    } else {
-      // Find the length of the array
-      int command_input_length = sizeof(COMMAND_INPUT) - 1;
 
-      // Handle backspace
-      if (input == 263) {
-        // Remove key
-        remove_character(COMMAND_INPUT, 100, command_used_length);
-        command_used_length = command_used_length - 1;
-
-        // Cap the cursor
-        if (command_used_length < 1) {
-          command_used_length = 1;
-        }
-      } else {
-        // Add key
-        modify_character(COMMAND_INPUT, 100, command_used_length, input);
-        command_used_length = command_used_length + 1;
-      }
-    }
+    // Update command_window
+    mvwprintw(COMMAND_WINDOW, 0, COLUMNS - 5, "%i", input);
+    mvwprintw(COMMAND_WINDOW, 0, 1, "%s", COMMAND_INPUT);
   } else {
     switch (input) {
-    case 'q':
-      return 0;
     case 58: // Colon
-      if (CURRENT_MODE != COMMAND)
-        CURRENT_MODE = COMMAND;
+      if (CURRENT_MODE != COMMAND_MODE) {
+        // Clear command system and add command symbol
+        exit_command_mode(EXIT_COMMAND_MODE_CLEAR_ALL_ADDITIVE, 0, NULL);
+        CURRENT_MODE = COMMAND_MODE;
+      }
       break;
     }
   }
-
-  mvprintw(0, 0, "N%i;K%c;M%s", input, input, mode_as_string(CURRENT_MODE));
-
-  mvprintw(25, 0, "%s", COMMAND_INPUT);
+  wrefresh(COMMAND_WINDOW);
   return 1;
 }
 
-// Modifies the Nth character of a string to another
-// Returns: -N --- Error (code N)
-//           1 --- Success
-int modify_character(char *string, int size, int position, char character) {
-  // Make sure the position is within bounds
-  if (position >= 1 && position <= size) {
-    string[position - 1] = character;
-    return 1;
-  } else {
-    return -1;
-  }
-}
+int parse_key_command(int input) {
+  // Check for enter key
+  if (input == 10)
+    return 2;
 
-// Removes the Nth character of a string
-// Returns: -N --- Error (code N)
-//           1 --- Success
-int remove_character(char *string, int size, int position) {
-  // Make sure the position is within bounds
-  if (position >= 1 && position <= size) {
-    // Shift the characters to the left starting from said position
-    for (int i = position - 1; i < size - 1; i++) {
-      string[i] = string[i + 1];
-    }
-    string[size - 1] = '\0';
+  // Find the length of the array
+  int command_input_length = sizeof(COMMAND_INPUT) - 1;
+
+  // Add key
+  if (input != 263) {
+    modify_character(COMMAND_INPUT, command_input_length, COMMAND_USED_INPUT,
+                     input);
+    COMMAND_USED_INPUT = COMMAND_USED_INPUT + 1;
     return 1;
-  } else {
-    return -1;
   }
+
+  // Decrease counter
+  COMMAND_USED_INPUT = COMMAND_USED_INPUT - 1;
+
+  // If trying to remove the :, exit command mode
+  if (COMMAND_USED_INPUT < 1) {
+    exit_command_mode(EXIT_COMMAND_MODE_CLEAR_SYMBOL, 0, NULL);
+    return 1;
+  }
+
+  // Remove character from string
+  remove_character(COMMAND_INPUT, command_input_length, COMMAND_USED_INPUT);
+
+  // Remove character from command window
+  mvwprintw(COMMAND_WINDOW, 0, COMMAND_USED_INPUT, " ");
+  wrefresh(COMMAND_WINDOW);
+  return 1;
 }
