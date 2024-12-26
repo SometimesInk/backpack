@@ -1,4 +1,5 @@
 #include "command_handler.h"
+#include "command_logic_add.h"
 #include "command_logic_echo.h"
 #include "input_handler.h"
 #include "items.h"
@@ -35,11 +36,11 @@ int parse_command() {
 
     // Ensure null termination
     output[sizeof(output) - 1] = '\0';
+  } else if (strcmp(command, "add") == 0) {
+    strncpy(output, parse_command_execute_add(arguments), sizeof(output) - 1);
+    output[sizeof(output) - 1] = '\0';
   } else {
-    // Safely copy to output
     strncpy(output, "E1: Unknown command", sizeof(output) - 1);
-
-    // Ensure null termination
     output[sizeof(output) - 1] = '\0';
   }
 

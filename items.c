@@ -20,13 +20,6 @@ int items_initialize() {
   strncpy(ITEMS[0].name, "Root", sizeof(ITEMS[0].name) - 1);
   ITEMS[0].name[sizeof(ITEMS[0].name) - 1] = '\0';
 
-  strncpy(ITEMS[0].description, "The root of all items",
-          sizeof(ITEMS[0].description) - 1);
-  ITEMS[0].description[sizeof(ITEMS[0].description) - 1] = '\0';
-
-  strncpy(ITEMS[0].path, "/", sizeof(ITEMS[0].path) - 1);
-  ITEMS[0].path[sizeof(ITEMS[0].path) - 1] = '\0';
-
   ITEMS[0].type = ITEM_TYPE_CONTAINER;
   return 1;
 }
@@ -79,11 +72,15 @@ int items_remove_at_index(int i) {
 }
 
 char *items_render_all() {
-  for (int i = 0; i > ITEMS_NUMBER_OF_ITEMS; i++) {
-    mvwprintw(WINDOW_MAIN, i, 0, "%i", i);
+  mvwprintw(WINDOW_MAIN, 0, 0, "Root");
+  for (int i = 1; i < ITEMS_NUMBER_OF_ITEMS; i++) {
+    int color = (items_get_type_color(ITEMS[i].type));
+    attron(COLOR_PAIR(color));
+    mvwprintw(WINDOW_MAIN, i, 0, "%s, %i", ITEMS[i].name, color);
+    attroff(COLOR_PAIR(color));
   }
 
   wrefresh(WINDOW_MAIN);
 
-  return "rendered successfully";
+  return "Rendered items";
 }

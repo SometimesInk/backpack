@@ -1,12 +1,13 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
+#include <ncurses.h>
+
 /// Item type values:
 ///   0 --- Container
 ///   1 --- Normal
 ///   2 --- Magic
 ///   3 --- Artefact
-#include <ncurses.h>
 typedef enum {
   /// 0 --- ...
   ITEM_TYPE_CONTAINER,
@@ -20,8 +21,6 @@ typedef enum {
 
 typedef struct {
   char name[16];
-  char description[100];
-  char path[52]; // /name16b/name16b/name16b'\0'
   Item_Type type;
 } Item;
 
