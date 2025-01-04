@@ -1,4 +1,5 @@
 #include "items.h"
+#include "string_manipulations.h"
 #include "window_handler.h"
 #include <ncurses.h>
 #include <stdlib.h>
@@ -72,15 +73,14 @@ int items_remove_at_index(int i) {
 }
 
 char *items_render_all() {
-  mvwprintw(WINDOW_MAIN, 0, 0, "Root");
   for (int i = 1; i < ITEMS_NUMBER_OF_ITEMS; i++) {
     int color = (items_get_type_color(ITEMS[i].type));
-    attron(COLOR_PAIR(color));
+    wattron(WINDOW_MAIN, COLOR_PAIR(color));
     mvwprintw(WINDOW_MAIN, i, 0, "%s, %i", ITEMS[i].name, color);
-    attroff(COLOR_PAIR(color));
+    wattroff(WINDOW_MAIN, COLOR_PAIR(color));
   }
 
   wrefresh(WINDOW_MAIN);
 
-  return "Rendered items";
+  return format_string("%i", ITEMS[ITEMS_NUMBER_OF_ITEMS - 1].type);
 }

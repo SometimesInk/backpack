@@ -1,9 +1,11 @@
 #include "command_handler.h"
 #include "command_logic_add.h"
 #include "command_logic_echo.h"
+#include "command_logic_export.h"
 #include "input_handler.h"
 #include "items.h"
 #include "modes.h"
+#include "string_manipulations.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -31,13 +33,19 @@ int parse_command() {
     // Ensure null termination
     output[sizeof(output) - 1] = '\0';
   } else if (strcmp(command, "render") == 0) {
-    // Safely copy to output
     strncpy(output, items_render_all(), sizeof(output) - 1);
-
-    // Ensure null termination
+    output[sizeof(output) - 1] = '\0';
+  } else if (strcmp(command, "export") == 0) {
+    strncpy(output, parse_command_execute_export(arguments),
+            sizeof(output) - 1);
     output[sizeof(output) - 1] = '\0';
   } else if (strcmp(command, "add") == 0) {
     strncpy(output, parse_command_execute_add(arguments), sizeof(output) - 1);
+    output[sizeof(output) - 1] = '\0';
+  } else if (strcmp(command, "debug") == 0) {
+    char *formatted_string = format_string("%i", 1231);
+    strncpy(output, formatted_string, sizeof(output) - 1);
+    free(formatted_string);
     output[sizeof(output) - 1] = '\0';
   } else {
     strncpy(output, "E1: Unknown command", sizeof(output) - 1);

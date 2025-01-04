@@ -1,5 +1,7 @@
 #include "command_logic_add.h"
 #include "items.h"
+#include "string_manipulations.h"
+#include <stdlib.h>
 #include <string.h>
 
 char *parse_command_execute_add(char *arguments) {
@@ -8,36 +10,28 @@ char *parse_command_execute_add(char *arguments) {
   char name[sizeof(item.name)];
   Item_Type type;
 
-  // Parse item
+  // Loop for each word in arguments
   char *element = strtok(arguments, " ");
+  char *formatted_element;
   int i = 0;
   while (element != NULL) {
-    switch (i) {
-    case 0:
-      // Copy element to name
-      strncpy(item.name, element, sizeof(name));
-      name[sizeof(name) - 1] = '\0';
-      break;
-    case 1:
-      if (strcmp(element, "0") == 0) {
-        item.type = 0;
-      } else if (strcmp(element, "1") == 0) {
-        item.type = 1;
-      } else if (strcmp(element, "2") == 0) {
-        item.type = 2;
-      } else if (strcmp(element, "3") == 0) {
-        item.type = 3;
-      } else {
-        return "E9: Invalid argument";
-      }
-      break;
+    if (i == 0) {
+      // Find type as an integer
+      type = strtol(element, NULL, 10);
+      item.type = type;
+    } else {
+      // Add element to name
+      formatted_element = format_string("%s ", element);
+      strcat(name, formatted_element);
+      free(formatted_element);
     }
 
+    // Go to next argument
     element = strtok(NULL, " ");
     i++;
   }
 
   items_add_item(item);
 
-  return "Successfully added item";
+  return "Added item.";
 }
