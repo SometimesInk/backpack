@@ -7,15 +7,18 @@
 #include <stdlib.h>
 
 int main() {
+  // Initialize key registering variable
   int ch;
 
   // Initialize ncurses
   initscr();
 
+  // Full terminal control
   raw();
   keypad(stdscr, TRUE);
   noecho();
 
+  // Check for colors, this may cause troubles on Kitty terminal
   if (!has_colors()) {
     printw("E3: Terminal has no colors");
     getch();

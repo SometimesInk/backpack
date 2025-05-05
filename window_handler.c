@@ -7,7 +7,7 @@ WINDOW *WINDOW_LINE_NUMBERS;
 WINDOW *WINDOW_MAIN;
 
 void windows_initialize() {
-  refresh();
+  refresh(); // Macroes to wrefresh(stdscr);
   WINDOW_COMMAND = newwin(1, COLUMNS, ROWS - 1, 0);
   WINDOW_LINE_NUMBERS = newwin(ROWS - 1, 3, 0, 0);
   WINDOW_MAIN = newwin(ROWS - 1, COLUMNS - 3, 0, 3);
